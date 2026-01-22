@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorry Surprise</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Times New Roman', serif;
+      overflow: hidden;
+      color: black;
+      background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a1c4fd, #c2e9fb, #d4fc79, #96e6a1);
+      background-size: 1400% 1400%;
+      animation: gradientShift 25s ease infinite;
+    }
+
+    /* animated background gradient */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* floating emoji base style */
+    .floating {
+      position: absolute;
+      font-size: 2rem;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    /* directions */
+    @keyframes floatUp {
+      from { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+      to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes floatDown {
+      from { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes floatLeft {
+      from { transform: translateX(100vw) rotate(0deg); opacity: 1; }
+      to { transform: translateX(-10vw) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes floatRight {
+      from { transform: translateX(-10vw) rotate(0deg); opacity: 1; }
+      to { transform: translateX(100vw) rotate(360deg); opacity: 0; }
+    }
+
+    .box {
+      background: #fefefe;
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      display: none;
+      position: relative;
+      z-index: 10;
+    }
+
+    .box.active {
+      display: block;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      background: #ff7eb3;
+      color: white;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Times New Roman', serif;
+    }
+
+    button:hover {
+      background: #ff4d94;
+    }
+
+    /* dynamic sorry container */
+    .sorry-container {
+      height: 200px;
+      overflow-y: auto;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 15px;
+      background: #fafafa;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Message Boxes -->
+  <div id="box1" class="box active">
+    <p>🐼.......sorry yar.......🐼 <br> I know you have a soft corner for me 😘<br>
+    No matter how much we fight, we always talk again 💖<br>
+    <b>Note:</b> Before going inside remember am waiting in the terrace for our cute talks....</p>
+    <button onclick="nextBox(2)">Touch Me</button>
+  </div>
+
+  <div id="box2" class="box">
+    <p>“I’m sorry, but you look too cute to stay mad at me.” 💕</p>
+    <button onclick="nextBox(3)">Touch Me</button>
+  </div>
+
+  <div id="box3" class="box">
+    <p>“I’m sorry, now can we go back to blush each other? 💖<br>
+    Wait... I think you deserve 1000 sorries 😍 Take it!”</p>
+    <button onclick="nextBox(4)">Touch Me</button>
+  </div>
+
+  <div id="box4" class="box">
+    <p>Here come your 1000 sorries with love 💓</p>
+    <div class="sorry-container" id="sorryContainer"></div>
+    <button onclick="nextBox(5)">Final Touch</button>
+  </div>
+
+  <div id="box5" class="box">
+    <p>💖 Madamji, this is your reminder... I am waiting here for our cute talk on the terrace 🐼💞</p>
+  </div>
+
+  <script>
+    function nextBox(n) {
+      document.querySelectorAll('.box').forEach(b => b.classList.remove('active'));
+      document.getElementById('box' + n).classList.add('active');
+
+      if (n === 4) {
+        startSorryAnimation();
+      }
+    }
+
+    function startSorryAnimation() {
+      const container = document.getElementById('sorryContainer');
+      container.innerHTML = "";
+      const emojis = ["🐼","💖","😘","💕","😍","💓","💞","⭐","🌙","✨"];
+      let count = 0;
+      const interval = setInterval(() => {
+        if (count >= 1000) {
+          clearInterval(interval);
+          return;
+        }
+        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+        const span = document.createElement("span");
+        span.textContent = "Sorry " + emoji + " ";
+        container.appendChild(span);
+        count++;
+        container.scrollTop = container.scrollHeight;
+      }, 20);
+    }
+
+    // Floating emoji background generator
+    const bgEmojis = ["🐼","💖","😘","💕","😍","💓","💞","⭐","🌙","✨","🌸","💐"];
+
+    function createFloatingEmoji() {
+      const emoji = document.createElement("div");
+      emoji.className = "floating";
+      emoji.textContent = bgEmojis[Math.floor(Math.random() * bgEmojis.length)];
+      emoji.style.fontSize = (Math.random() * 2 + 1.5) + "rem";
+      emoji.style.animationDuration = (4 + Math.random() * 6) + "s";
+
+      // Pick random direction
+      const direction = ["up","down","left","right"][Math.floor(Math.random() * 4)];
+      if (direction === "up") {
+        emoji.style.left = Math.random() * 100 + "vw";
+        emoji.style.bottom = "-2rem";
+        emoji.style.animationName = "floatUp";
+      } else if (direction === "down") {
+        emoji.style.left = Math.random() * 100 + "vw";
+        emoji.style.top = "-2rem";
+        emoji.style.animationName = "floatDown";
+      } else if (direction === "left") {
+        emoji.style.right = "-2rem";
+        emoji.style.top = Math.random() * 100 + "vh";
+        emoji.style.animationName = "floatLeft";
+      } else {
+        emoji.style.left = "-2rem";
+        emoji.style.top = Math.random() * 100 + "vh";
+        emoji.style.animationName = "floatRight";
+      }
+
+      document.body.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 12000);
+    }
+
+    // Launch 100 emojis at once
+    function launchEmojiShower() {
+      for (let i = 0; i < 100; i++) {
+        setTimeout(createFloatingEmoji, i * 50); 
+      }
+    }
+
+    // Keep shower running
+    setInterval(launchEmojiShower, 5000); 
+    launchEmojiShower(); // initial burst
+  </script>
+</body>
+</html>
+
